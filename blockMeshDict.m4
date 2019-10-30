@@ -414,7 +414,7 @@ convertToMeters 1.0;
 define(c, 1.0)
 
 //Angle of attack (in radian)
-define(alpha, 0.3)
+define(alpha, 0.0)
 
 //NACA digits
 define(NACA1, 4)
@@ -423,6 +423,9 @@ define(NACA3, 1)
 define(NACA4, 2)
 
 //Mesh
+
+//Resolution scale factor
+define(Rs, 5)
 
 //Height of mesh in y direction
 define(L1, 8.0)
@@ -439,19 +442,19 @@ define(sc, 1.0)
 //Number of cells and points at each direction and element
 
 //Number of cells in y direction
-define(Nl1, 400)
+define(Nl1, calc(16*Rs))
 
 //Number of cells in downstream
-define(Nl2, 1500)
+define(Nl2, calc(32*Rs))
 
 //Number of cells in z direction
 define(Nl3, 1)
 
 //Number of meshes on the front part of airfoil edges p8-p9 and p8-p10b
-define(Nl4, 100)
+define(Nl4, calc(2*Rs))
 
 //Number of meshes on the back part of airfoil edges p9-p11 and p10-p11
-define(Nl5, 70)
+define(Nl5, calc(5*Rs))
 
 //Number of interpolation points along the airfoil for defining the splines
 define(Naf, 99)
