@@ -16,6 +16,7 @@ FoamFile
 
 changecom(//)changequote([{,}])
 define(calc, [{esyscmd(perl -e 'use Math::Trig; print ($1)')}])
+define(gradreduce, ($1**(2/3)))
 define(VCOUNT, 0)
 define(vlabel, [{[{// }]Vertex $1 = VCOUNT define($1, VCOUNT)define([{VCOUNT}], incr(VCOUNT))}])
 
@@ -414,24 +415,24 @@ convertToMeters 1.0;
 define(c, 1.0)
 
 //Angle of attack (in radian)
-define(alpha, 0.0)
+define(alpha, calc(pi/180*10.0))
 
 //NACA digits
-define(NACA1, 4)
-define(NACA2, 4)
+define(NACA1, 0)
+define(NACA2, 0)
 define(NACA3, 1)
 define(NACA4, 2)
 
 //Mesh
 
 //Resolution scale factor
-define(Rs, 5)
+define(Rs, 14)
 
 //Height of mesh in y direction
-define(L1, 8.0)
+define(L1, 64.0)
 
 //Length of downstream
-define(L2, 16.0)
+define(L2, 128.0)
 
 //Foil depth in z direction perpendicular to x-y surface
 define(L3, 0.5)
@@ -445,16 +446,16 @@ define(sc, 1.0)
 define(Nl1, calc(16*Rs))
 
 //Number of cells in downstream
-define(Nl2, calc(32*Rs))
+define(Nl2, calc(16*Rs))
 
 //Number of cells in z direction
 define(Nl3, 1)
 
 //Number of meshes on the front part of airfoil edges p8-p9 and p8-p10b
-define(Nl4, calc(2*Rs))
+define(Nl4, calc(4*Rs))
 
 //Number of meshes on the back part of airfoil edges p9-p11 and p10-p11
-define(Nl5, calc(5*Rs))
+define(Nl5, calc(16*Rs))
 
 //Number of interpolation points along the airfoil for defining the splines
 define(Naf, 99)
@@ -462,10 +463,10 @@ define(Naf, 99)
 //Cell expansion ratios
 
 //Expansion ratio in y direction
-define(E1, 300)
+define(E1, 4096)
 
 //Expansion ratio in downstream side
-define(E2, 5)
+define(E2, 256)
 
 //Expansion ratio in inlet
 define(E3, 10)
@@ -522,13 +523,13 @@ define(noseX, calc((-1*L1 + axuAlphaC[Cmax])*cos(alpha)))
 define(noseY, calc((L1 - axuAlphaC[Cmax])*sin(alpha)))
 
 define(x00, noseX)
-define(x01, calc(axlAlphaC[Cmax]-1))
-define(x02, calc(axuAlphaC[Naf]+1))
+define(x01, calc(axlAlphaC[Cmax]-(L1/8)))
+define(x02, calc(axuAlphaC[Naf]+(L1/8)))
 define(x03, L2)
 define(x04, L2)
 define(x05, L2)
-define(x06, calc(axuAlphaC[Naf]+1))
-define(x07, calc(axuAlphaC[Cmax]-1))
+define(x06, calc(axuAlphaC[Naf]+(L1/8)))
+define(x07, calc(axuAlphaC[Cmax]-(L1/8)))
 define(x08, 0)
 define(x09, calc(axuAlphaC[Cmax]))
 define(x10, calc(axlAlphaC[Cmax]))
@@ -626,13 +627,13 @@ blocks
     hex2D(p02, p03, p04, p11)
     square
     (Nl2 Nl1 Nl3)
-    edgeGrading (calc(E2/2) E2 E2 calc(E2/2) calc(1/E1) calc(2/E1) calc(2/E1) calc(1/E1) 1 1 1 1)
+    edgeGrading (calc(gradreduce(E2)) E2 E2 calc(gradreduce(E2)) calc(1/E1) calc(1/gradreduce(E1)) calc(1/gradreduce(E1)) calc(1/E1) 1 1 1 1)
     
     //B3
     hex2D(p11, p04, p05, p06)
     square
     (Nl2 Nl1 Nl3)
-    edgeGrading (E2 calc(E2/2) calc(E2/2) E2 E1 calc(E1/2) calc(E1/2) E1 1 1 1 1)
+    edgeGrading (E2 calc(gradreduce(E2)) calc(gradreduce(E2)) E2 E1 calc(gradreduce(E1)) calc(gradreduce(E1)) E1 1 1 1 1)
     
     //B4
     hex2D(p09, p11, p06, p07)
